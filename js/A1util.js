@@ -1,23 +1,25 @@
+var g_sCanvasName = "A1Main_canvas";
+
 window.onload = window.onresize = function() {
-    var wRatio = 0.6
-    , viewPort = {
+    var _widthRatio = 0.6
+    , _viewPort = {
         w: window.innerWidth,
         h: window.innerHeight
     }
-    , canvas = {
-        element: document.getElementById("A1MainCanvas"),
-        w: viewPort.w * wRatio,
-        h: (viewPort.w * wRatio) / 2
+    , _canvas = {
+        elem: document.getelemById(g_sCanvasName),
+        w: _viewPort.w * _widthRatio,
+        h: (_viewPort.w * _widthRatio) / 2
     };
 
-    //Center the canvas and scale it
-    canvas.element.style.position = "fixed";
-    canvas.element.style.top = (viewPort.h - canvas.h) / 2 + "px";
-    canvas.element.style.left = (viewPort.w - canvas.w) / 2 + "px";
-    canvas.element.setAttribute("width", canvas.w);
-    canvas.element.setAttribute("height", canvas.h);
-    canvas.element.style.top = (viewPort.h - canvas.h) / 2;
-    canvas.element.style.left = (viewPort.w - canvas.w) / 2;
+    //Center the _canvas and scale it
+    _canvas.elem.style.position = "fixed";
+    _canvas.elem.style.top = (_viewPort.h - _canvas.h) / 2 + "px";
+    _canvas.elem.style.left = (_viewPort.w - _canvas.w) / 2 + "px";
+    _canvas.elem.setAttribute("width", _canvas.w);
+    _canvas.elem.setAttribute("height", _canvas.h);
+    _canvas.elem.style.top = (_viewPort.h - _canvas.h) / 2;
+    _canvas.elem.style.left = (_viewPort.w - _canvas.w) / 2;
 
-    window.ctx = canvas.element.getContext("2d");
+    window.ctx = _canvas.elem.getContext("2d");
 };
