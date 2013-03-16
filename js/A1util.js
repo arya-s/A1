@@ -1,4 +1,4 @@
-var g_sCanvasName = "A1Main_canvas";
+var g_sCanvasName = "A1MainCanvas";
 
 window.onload = window.onresize = function() {
     var _widthRatio = 0.6
@@ -7,7 +7,7 @@ window.onload = window.onresize = function() {
         h: window.innerHeight
     }
     , _canvas = {
-        elem: document.getelemById(g_sCanvasName),
+        elem: document.getElementById("A1MainCanvas"),
         w: _viewPort.w * _widthRatio,
         h: (_viewPort.w * _widthRatio) / 2
     };
