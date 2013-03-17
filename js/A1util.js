@@ -1,13 +1,14 @@
 var g_sCanvasName = "A1MainCanvas";
+var g_eContext;
 
-window.onload = window.onresize = function() {
+function init(){
     var _widthRatio = 0.6
     , _viewPort = {
         w: window.innerWidth,
         h: window.innerHeight
     }
     , _canvas = {
-        elem: document.getElementById("A1MainCanvas"),
+        elem: document.getElementById(g_sCanvasName),
         w: _viewPort.w * _widthRatio,
         h: (_viewPort.w * _widthRatio) / 2
     };
@@ -21,5 +22,8 @@ window.onload = window.onresize = function() {
     _canvas.elem.style.top = (_viewPort.h - _canvas.h) / 2;
     _canvas.elem.style.left = (_viewPort.w - _canvas.w) / 2;
 
-    window.ctx = _canvas.elem.getContext("2d");
-};
+    g_eContext = _canvas.elem.getContext("2d");
+}
+
+init();
+window.onresize = init;
