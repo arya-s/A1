@@ -41,11 +41,11 @@ $(document).ready(function() {
 		}
 
 		if (keydown.up) {
-			g_oPlayer.y += 5;
+			g_oPlayer.y -= 5;
 		}
 
 		if (keydown.down) {
-			g_oPlayer.y -= 5;
+			g_oPlayer.y += 5;
 		}
 
 		//Clamp so we don't move the character out of the screen
