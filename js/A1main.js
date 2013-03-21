@@ -24,32 +24,14 @@ $(document).ready(function() {
 
 	function draw() {
 		g_eContext.clearRect(0, 0, g_eViewport.w, g_eViewport.h);
-		g_oPlayer.draw();
+		for(var e in g_pEntities){
+			g_pEntities[e].draw();
+		}
 	}
 
 	function update(dt) {
-		if (keydown.space) {
-			g_oPlayer.shoot();
+		for(var e in g_pEntities){
+			g_pEntities[e].update(dt);
 		}
-
-		if (keydown.left || keydown.a) {
-			g_oPlayer.x -= 5;
-		}
-
-		if (keydown.right || keydown.d) {
-			g_oPlayer.x += 5;
-		}
-
-		if (keydown.up || keydown.w) {
-			g_oPlayer.y -= 5;
-		}
-
-		if (keydown.down || keydown.s) {
-			g_oPlayer.y += 5;
-		}
-
-		//Clamp so we don't move the character out of the screen
-		g_oPlayer.x = A1clamp(g_oPlayer.x, 0, g_eCanvas.w - g_oPlayer.w);
-		g_oPlayer.y = A1clamp(g_oPlayer.y, 0, g_eCanvas.h - g_oPlayer.h);
 	}
 });
