@@ -6,12 +6,13 @@ var g_sCanvasName = "A1MainCanvas"
 }
 , g_eCanvas = {
     elem: document.getElementById(g_sCanvasName)
-    , w: g_eViewport.w * g_nWidthRatio
-    , h: (g_eViewport.w * g_nWidthRatio) / 2
+    , w: 1024 //g_eViewport.w * g_nWidthRatio
+    , h: 576 //(g_eViewport.w * g_nWidthRatio) / 2
 }
 , g_eContext = null
 , g_oPlayer = null
-, g_pEntities = {};	//Holds all entities identified by their unique name
+, g_pEntities = {}	//Holds all entities identified by their unique name
+, g_oPlayingfield = null;
 
 //Make sure jQuery is loaded else we can't use the hotkey plugin
 $(document).ready(function() {
@@ -31,8 +32,8 @@ $(document).ready(function() {
         g_oPlayer = {
             uniqueName: "Player"
             , color: "#00A"
-            , x: 270
-            , y: 270
+            , x: 0
+            , y: 0
             , w: 32
             , h: 32
             , speed: 250
@@ -66,6 +67,8 @@ $(document).ready(function() {
             }
         };
 
+        createPlayfield(32, 18, 32);
+
         //Add to entities
         g_pEntities[g_oPlayer.uniqueName] = g_oPlayer;
     }
@@ -95,5 +98,60 @@ $(document).ready(function() {
 			g_pEntities[e].update(dt);
 		}
 	}
+
+    function createPlayfield(width, height, fieldSize){
+        g_oPlayingfield = {
+            uniqueName: "Playfield"
+            , w: width
+            , h: height
+            , drawFieldSize: fieldSize
+            , field: []
+            , draw: function(){
+                for(var row=0; row<this.h; row++){
+                    for(var col=0; col<this.w; col++){
+                        var fillColor;
+                        switch(this.field[row][col]){
+                            case 0:
+                                //Wall
+                                fillColor = "#AAA";
+                                break;
+                            case 1:
+                                //Walkable
+                                fillColor = "#663";
+                                break;
+                            case 2:
+                                fillColor = g_oPlayer.color;
+                                break;
+                            default:
+                        }
+
+                        g_eContext.fillStyle = fillColor;
+                        g_eContext.fillRect(col*this.drawFieldSize, row*this.drawFieldSize, this.drawFieldSize, this.drawFieldSize);
+                    }
+                }
+            }
+            , update: function(dt){
+                //Empty for now
+            }
+        };
+
+        //Fill the field with walkables first.
+        for(var row=0; row<height; row++){
+            g_oPlayingfield.field[row] = [];
+            for(var col=0; col<width; col++){
+                g_oPlayingfield.field[row][col] = 1;
+            }
+        }
+
+        //put some arbitray walls
+        for(var i=0; i<128; i++){
+            var x = Math.floor((Math.random()*32));
+            var y = Math.floor((Math.random()*18));
+            g_oPlayingfield.field[y][x] = 0;
+        }
+
+        //Add to entities
+        g_pEntities[g_oPlayingfield.uniqueName] = g_oPlayingfield;
+    }
 });
 
