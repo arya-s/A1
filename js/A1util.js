@@ -44,6 +44,6 @@ function init(){
 init();
 window.onresize = init;
 
-function clamp(val, min, max){
+function A1clamp(val, min, max){
     return Math.min(Math.max(val, min), max);
 }

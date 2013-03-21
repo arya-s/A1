@@ -32,24 +32,24 @@ $(document).ready(function() {
 			g_oPlayer.shoot();
 		}
 
-		if (keydown.left) {
+		if (keydown.left || keydown.a) {
 			g_oPlayer.x -= 5;
 		}
 
-		if (keydown.right) {
+		if (keydown.right || keydown.d) {
 			g_oPlayer.x += 5;
 		}
 
-		if (keydown.up) {
+		if (keydown.up || keydown.w) {
 			g_oPlayer.y -= 5;
 		}
 
-		if (keydown.down) {
+		if (keydown.down || keydown.s) {
 			g_oPlayer.y += 5;
 		}
 
 		//Clamp so we don't move the character out of the screen
-		g_oPlayer.x = clamp(g_oPlayer.x, 0, g_eCanvas.w - g_oPlayer.w);
-		g_oPlayer.y = clamp(g_oPlayer.y, 0, g_eCanvas.h - g_oPlayer.h);
+		g_oPlayer.x = A1clamp(g_oPlayer.x, 0, g_eCanvas.w - g_oPlayer.w);
+		g_oPlayer.y = A1clamp(g_oPlayer.y, 0, g_eCanvas.h - g_oPlayer.h);
 	}
 });
