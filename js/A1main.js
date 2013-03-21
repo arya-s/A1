@@ -1,17 +1,17 @@
 var g_sCanvasName = "A1MainCanvas"
 , g_nWidthRatio = 0.6
 , g_eViewport = {
-        w: window.innerWidth,
-        h: window.innerHeight
+        w: window.innerWidth
+        , h: window.innerHeight
 }
 , g_eCanvas = {
-    elem: document.getElementById(g_sCanvasName),
-    w: g_eViewport.w * g_nWidthRatio,
-    h: (g_eViewport.w * g_nWidthRatio) / 2
+    elem: document.getElementById(g_sCanvasName)
+    , w: g_eViewport.w * g_nWidthRatio
+    , h: (g_eViewport.w * g_nWidthRatio) / 2
 }
 , g_eContext = null
 , g_oPlayer = null
-, g_pEntities = {};  //Holds all entities identified by their unique name
+, g_pEntities = {};	//Holds all entities identified by their unique name
 
 //Make sure jQuery is loaded else we can't use the hotkey plugin
 $(document).ready(function() {
@@ -35,6 +35,7 @@ $(document).ready(function() {
             , y: 270
             , w: 32
             , h: 32
+            , speed: 250
             , draw: function(){
                 g_eContext.fillStyle = this.color;
                 g_eContext.fillRect(this.x, this.y, this.w, this.h);
@@ -47,16 +48,16 @@ $(document).ready(function() {
                     g_oPlayer.shoot();
                 }
                 if (keydown.left || keydown.a) {
-                    g_oPlayer.x -= 5;
+                    g_oPlayer.x -= this.speed*dt;
                 }
                 if (keydown.right || keydown.d) {
-                    g_oPlayer.x += 5;
+                    g_oPlayer.x += this.speed*dt;
                 }
                 if (keydown.up || keydown.w) {
-                    g_oPlayer.y -= 5;
+                    g_oPlayer.y -= this.speed*dt;
                 }
                 if (keydown.down || keydown.s) {
-                    g_oPlayer.y += 5;
+                    g_oPlayer.y += this.speed*dt;
                 }
 
                 //Clamp so we don't move the character out of the screen
@@ -72,11 +73,8 @@ $(document).ready(function() {
     init();
     window.onresize = init;
 
-	var last = new Date();
 	function gameloop() {
-		var dt = new Date() - last;
-
-		update(dt);
+		update(A1getTimeDiff());
 		draw();
 
 		requestAnimFrame(gameloop);
@@ -98,3 +96,4 @@ $(document).ready(function() {
 		}
 	}
 });
+
