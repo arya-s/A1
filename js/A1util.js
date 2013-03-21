@@ -1,29 +1,28 @@
 var g_sCanvasName = "A1MainCanvas"
-, g_eContext
+, g_nWidthRatio = 0.6
 , g_eViewport = {
         w: window.innerWidth,
         h: window.innerHeight
 }
+, g_eCanvas = {
+    elem: document.getElementById(g_sCanvasName),
+    w: g_eViewport.w * g_nWidthRatio,
+    h: (g_eViewport.w * g_nWidthRatio) / 2
+}
+, g_eContext
 , g_oPlayer = null;
 
 function init(){
-    var _widthRatio = 0.6
-    , _canvas = {
-        elem: document.getElementById(g_sCanvasName),
-        w: g_eViewport.w * _widthRatio,
-        h: (g_eViewport.w * _widthRatio) / 2
-    };
+    //Center the g_eCanvas and scale it
+    g_eCanvas.elem.style.position = "fixed";
+    g_eCanvas.elem.style.top = (g_eViewport.h - g_eCanvas.h) / 2 + "px";
+    g_eCanvas.elem.style.left = (g_eViewport.w - g_eCanvas.w) / 2 + "px";
+    g_eCanvas.elem.setAttribute("width", g_eCanvas.w);
+    g_eCanvas.elem.setAttribute("height", g_eCanvas.h);
+    g_eCanvas.elem.style.top = (g_eViewport.h - g_eCanvas.h) / 2;
+    g_eCanvas.elem.style.left = (g_eViewport.w - g_eCanvas.w) / 2;
 
-    //Center the _canvas and scale it
-    _canvas.elem.style.position = "fixed";
-    _canvas.elem.style.top = (g_eViewport.h - _canvas.h) / 2 + "px";
-    _canvas.elem.style.left = (g_eViewport.w - _canvas.w) / 2 + "px";
-    _canvas.elem.setAttribute("width", _canvas.w);
-    _canvas.elem.setAttribute("height", _canvas.h);
-    _canvas.elem.style.top = (g_eViewport.h - _canvas.h) / 2;
-    _canvas.elem.style.left = (g_eViewport.w - _canvas.w) / 2;
-
-    g_eContext = _canvas.elem.getContext("2d");
+    g_eContext = g_eCanvas.elem.getContext("2d");
 
     //Create the player
     g_oPlayer = {
@@ -45,6 +44,6 @@ function init(){
 init();
 window.onresize = init;
 
-Number.prototype.clamp = function(min, max) {
-  return Math.min(Math.max(this, min), max);
-};
+function clamp(val, min, max){
+    return Math.min(Math.max(val, min), max);
+}

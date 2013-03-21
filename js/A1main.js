@@ -49,7 +49,7 @@ $(document).ready(function() {
 		}
 
 		//Clamp so we don't move the character out of the screen
-		g_oPlayer.x = g_oPlayer.x.clamp(0, g_eViewport.w - g_oPlayer.w);
-		g_oPlayer.y = g_oPlayer.y.clamp(0, g_eViewport.h - g_oPlayer.h);
+		g_oPlayer.x = clamp(g_oPlayer.x, 0, g_eCanvas.w - g_oPlayer.w);
+		g_oPlayer.y = clamp(g_oPlayer.y, 0, g_eCanvas.h - g_oPlayer.h);
 	}
 });
