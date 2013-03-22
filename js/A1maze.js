@@ -2,14 +2,6 @@ function Maze(width, height){
 	//Only odd dimensions are valid
 	this.width = width|1;
 	this.height = height|1;
-}
-
-Maze.prototype.init = function(){
-	//Find a random start location from where to carve out the maze
-	//Must be odd and within range
-	var x = A1random(0, (this.width-1))|1;
-	var y = A1random(0, (this.height-1))|1;
-	this.startCarvePos = new A1Node(x, y);
 	//Fill the field full with walls - represented by 0
 	this.field = [];
 	for(var row=0; row<this.height; row++){
@@ -18,6 +10,14 @@ Maze.prototype.init = function(){
 			this.field[row][col] = 0;
 		}
 	}
+}
+
+Maze.prototype.init = function(){
+	//Find a random start location from where to carve out the maze
+	//Must be odd and within range
+	var x = A1random(0, (this.width-1))|1;
+	var y = A1random(0, (this.height-1))|1;
+	this.startCarvePos = new A1Node(x, y);
 
 	//Setting up an empty frontierlist
 	this.frontierList = [];
