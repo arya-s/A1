@@ -31,9 +31,9 @@ $(document).ready(function() {
 
     function init(){
         //Create a maze playfield
-        var maze = new Maze(g_oFieldSize.w, g_oFieldSize.h);
-        maze.init();
-        var startNode = maze.generate();
+        g_oMaze = new Maze(g_oFieldSize.w, g_oFieldSize.h);
+        g_oMaze.init();
+        var startNode = g_oMaze.generate();
 
         //Create the player
         g_oPlayer = {
@@ -112,7 +112,7 @@ $(document).ready(function() {
             , w: g_oFieldSize.w
             , h: g_oFieldSize.h
             , unitSize: g_oFieldSize.unitSize
-            , field: []
+            , field: g_oMaze.field
             , draw: function(){
                 for(var row=0; row<this.h; row++){
                     for(var col=0; col<this.w; col++){
@@ -127,20 +127,20 @@ $(document).ready(function() {
             }
         };
 
-        //Fill the field with walkables first.
-        for(var row=0; row<g_oPlayingfield.h; row++){
-            g_oPlayingfield.field[row] = [];
-            for(var col=0; col<g_oPlayingfield.w; col++){
-                g_oPlayingfield.field[row][col] = 1;
-            }
-        }
+        // //Fill the field with walkables first.
+        // for(var row=0; row<g_oPlayingfield.h; row++){
+        //     g_oPlayingfield.field[row] = [];
+        //     for(var col=0; col<g_oPlayingfield.w; col++){
+        //         g_oPlayingfield.field[row][col] = 1;
+        //     }
+        // }
 
-        //put some arbitray walls
-        for(var i=0; i<96; i++){
-            var x = A1random(0, g_oFieldSize.w);
-            var y = A1random(0, g_oFieldSize.h);
-            g_oPlayingfield.field[y][x] = 0;
-        }
+        // //put some arbitray walls
+        // for(var i=0; i<96; i++){
+        //     var x = A1random(0, g_oFieldSize.w);
+        //     var y = A1random(0, g_oFieldSize.h);
+        //     g_oPlayingfield.field[y][x] = 0;
+        // }
 
         //Add to entities
         g_pEntities[g_oPlayingfield.uniqueName] = g_oPlayingfield;

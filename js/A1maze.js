@@ -1,66 +1,66 @@
 function Maze(width, height){
-	this.w = width;
-	this.h = height;
-	this.field = [];
-	this.frontierList = [];
-	this.startingPosition = new A1Node(0, 0);
+	//Only odd dimensions are valid
+	this.width = width|1;
+	this.height = height|1;
 }
 
 Maze.prototype.init = function(){
-	//Init field full of walls
-	for(var row=0; row<this.h; row++){
+	//Find a random start location from where to carve out the maze
+	//Must be odd and within range
+	var x = A1random(0, (this.width-1))|1;
+	var y = A1random(0, (this.height-1))|1;
+	this.startCarvePos = new A1Node(x, y);
+	//Fill the field full with walls - represented by 0
+	this.field = [];
+	for(var row=0; row<this.height; row++){
 		this.field[row] = [];
-		for(var col=0; col<this.w; col++){
+		for(var col=0; col<this.width; col++){
 			this.field[row][col] = 0;
 		}
 	}
 
-	//Choose a random starting position and make sure its odd
-	this.startingPosition.x = A1random(0, this.w-1)|1;
-	this.startingPosition.y = A1random(0, this.h-1)|1;
-	console.log(this.startingPosition);
+	//Setting up an empty frontierlist
+	this.frontierList = [];
 };
 
 Maze.prototype.generate = function(){
-	//Mark the start
-	this.markAdjacent(this.startingPosition);
+	//Mark the starting position
+	this.markAdjacent(this.startCarvePos);
 	while(this.frontierList.length > 0){
-		//Pick a node out and delete it from the frontier list
-		var curNode = this.frontierList.splice(A1random(0, this.frontierList.length), 1);
-		//Find the neighbours of the current node
-		var nList = this.neighbours(curNode[0]);
-		//Pick a random neighbour next
+		//Take a random node out of the frontierList
+		var curNodeList = this.frontierList.splice(A1random(0, this.frontierList.length), 1);
+		var curNode = curNodeList[0];
+		var nList = this.neighbours(curNode.x, curNode.y);
 		var rndNeighbour = nList[A1random(0, nList.length)];
-		console.log("curNode: "+curNode);
-		console.log("rndNeighbour"+rndNeighbour);
-		//Carve out the way from the current Node to the neighbour
-		this.carve(rndNeighbour, curNode[0]);
-		//Mark adjacent
-		this.markAdjacent(curNode[0]);
+		//Carve from the neighbour the the current node
+		this.carve(rndNeighbour, curNode);
+		this.markAdjacent(curNode);
 
-		////Draw here to visualize the carving nicely
+		//Drawing here would look pretty
 	}
 
-	//Place the maze exit
+	//Place an exit
 	this.placeExit();
-	//Place player starting position and return it
-	return this.placeStart();
+	//Place a start and return it
+	return this.placePlayerStart();
 };
 
-Maze.prototype.placeStart = function(){
-	var x = 0;
-	var y = 0;
-	//Find a random valid starting position for the player
-	while(true){
-		x = A1random(0, this.w-1)|1;
-		y = A1random(0, this.h-1)|1;
+Maze.prototype.placePlayerStart = function(){
+	var x = 1;
+	var y = 1;
 
+	while(true){
+		//Find a player start position
+		x = A1random(0, (this.width-1))|1;
+		y = A1random(0, (this.height-1))|1;
+
+		//Make sure it's not a wall
 		if(this.field[y][x] !== 0){
+			//Mark found position with 2 for player start
 			this.field[y][x] = 2;
 			break;
 		}
 	}
-
 	return new A1Node(x, y);
 };
 
@@ -76,36 +76,34 @@ Maze.prototype.placeExit = function(){
 		//		#########
 		//			0(1,0)
 		//
-
-		//Choose a random side and which coordinate should be the active one
-		var side = A1random(0, 2);
-		var xSet = A1random(0, 2);
+		//Choose a random side and choose which coordinate is the active one
+		var side = A1random(0,2);
+		var xSet = A1random(0,2);
 		var ySet = 1-xSet;
-		this.eX = 0;
-		this.eY = 0;
+		this.exitPos = new A1Node(0, 0);
 		var inValid = true;
 
-		//Run as long as we have found a proper value where the opposite neighbour is
-		//not a wall so we can actually exit
+		//Run as long as we have found a proper value where the opposite neighbour
+		//is not a wall so we can actually exit
 		while(inValid){
 			//These will keep track of which neighbour to lookup
 			var valX = 0;
 			var valY = 0;
 
-			//Check for side 1 as shown in the diagram
-			if(side == 1){
-				if(xSet == 1){	//1(1,0)
-					//x can be random between 1 and width-2 so that we cant even select
+			//Check for side 1 as shown in diagram
+			if(side === 1){
+				if(xSet === 1){			//1(1,0)
+					//x can be random between 1 and cols-2 so that we cant even select
 					//the corners of the field as an exit
-					this.eX = A1random(1, this.w-2);
-					this.eY = 0;
-				} else {		//1(0,1)
+					this.exitPos.x = A1random(1, (this.width-2));
+					this.exitPos.y = 0;
+				} else {				//1(0,1)
 					//this time y is random and x is fixed
-					this.eX = 0;
-					this.eY = A1random(1, this.h-2);
+					this.exitPos.x = 0;
+					this.exitPos.y = A1random(1, (this.height-2));
 				}
 
-				if(this.eX === 0){
+				if(this.exitPos.x === 0){
 					//In case x was fixed, look at the neighbour to the right of it
 					valX = 1;
 				} else {
@@ -113,18 +111,18 @@ Maze.prototype.placeExit = function(){
 					valY = 1;
 				}
 			} else {
-				if(xSet == 1){	//0(1,0)
-					//Again, x can be random whereas y is fixed at the maximum value (we are
-					// on side 0 now, so fixed values are forced to maximum)
-					this.eX = A1random(1, this.w-2);
-					this.eY = this.h-1;
-				} else{		//0(0,1)
+				if(xSet === 1){			//0(1,0)
+					//Again, x can be random wheras y is fixed at maximum value (we are
+					//on side 0 now, so fixed values are forced to maximum
+					this.exitPos.x = A1random(1, (this.width-2));
+					this.exitPos.y = this.height-1;
+				} else {				//0(0,1)
 					//y random, x fixed to maximum
-					this.eX = this.w-1;
-					this.eY = A1random(1, this.h-2);
+					this.exitPos.x = this.width-1;
+					this.exitPos.y = A1random(1, (this.height-2));
 				}
 
-				if(this.eX == this.w-1){
+				if(this.exitPos.x === (this.width-1)){
 					//If x was fixed, look up the neighbour to its left
 					valX = -1;
 				} else {
@@ -133,65 +131,62 @@ Maze.prototype.placeExit = function(){
 				}
 			}
 
-			//Actual neighbour lookup, if there's a wall as neighbour we wouldn't be able to
-			//exit, so try with some new random values
-			if(this.field[this.eY+valY][this.eX+valX] !== 0){
+			//Actual neighbour lookup, if there's a wall as neighbour we wouldn't be able
+			//to exit so try with some new random values
+			if(this.field[(this.exitPos.y+valY)][(this.exitPos.x+valX)] !== 0){
 				inValid = false;
 			}
 		}
 
-		//Sets the exit based on found values, set walkable
-		this.field[this.eY][this.eX] = 1;
+		//Sets the exit based on values found
+		this.field[this.exitPos.y][this.exitPos.x] = 1;
 };
 
-//Makrs the field at x,y and its frontiers
-Maze.prototype.markAdjacent = function(node){
-	//Make it walkable
-	this.field[node.y][node.x] = 1;
-	this.addFrontier(new A1Node(node.x-2, node.y));
-	this.addFrontier(new A1Node(node.x+2, node.y));
-	this.addFrontier(new A1Node(node.x, node.y-2));
-	this.addFrontier(new A1Node(node.x, node.y+2));
+//Marks the field at x,y and its frontiers
+Maze.prototype.markAdjacent = function(n){
+	//Mark it walkable
+	this.field[n.y][n.x] = 1;
+	this.addFrontier(n.x-2, n.y);
+	this.addFrontier(n.x+2, n.y);
+	this.addFrontier(n.x, n.y-2);
+	this.addFrontier(n.x, n.y+2);
 };
 
 //Adds the frontier if its within valid values and the frontier was not previously traversed
-Maze.prototype.addFrontier = function(node){
-	if ((node.x > 0 && node.x < this.w - 1) && (node.y > 0 && node.y < this.h - 1) && (this.field[node.y][node.x] === 0)) {
+Maze.prototype.addFrontier = function(x, y){
+	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 0)){
 		//Frontier is represented by the value 6
-		this.field[node.y][node.y] = 6;
-		this.frontierList.push(node);
+		this.field[y][x] = 6;
+		this.frontierList.push(new A1Node(x, y));
 	}
 };
 
 //Gets all neighbours of the node that have been marked as walkable
-Maze.prototype.neighbours = function(node){
+Maze.prototype.neighbours = function(x, y){
 	var list = [];
-	if(this.checkNode(node.x-2, node.y)){
-		list.push(new A1Node(node.x-2, node.y));
+	if(this.checkNode(x-2, y)){
+		list.push(new A1Node(x-2, y));
 	}
-	if(this.checkNode(node.x+2, node.y)){
-		list.push(new A1Node(node.x+2, node.y));
+	if(this.checkNode(x+2, y)){
+		list.push(new A1Node(x+2, y));
 	}
-	if(this.checkNode(node.x, node.y-2)){
-		list.push(new A1Node(node.x, node.y-2));
+	if(this.checkNode(x, y-2)){
+		list.push(new A1Node(x, y-2));
 	}
-	if(this.checkNode(node.x, node.y+2)){
-		list.push(new A1Node(node.x, node.y+2));
+	if(this.checkNode(x, y+2)){
+		list.push(new A1Node(x, y+2));
 	}
-
 	return list;
 };
 
-//Checks if the given position is walkable
+//Checks the given position if its walkable
 Maze.prototype.checkNode = function(x, y){
-	if((x > 0 && x < this.w-1) && (y > 0 && y < this.h-1) && (this.field[y][x] == 1)){
+	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 1)){
 		return true;
 	}
-
 	return false;
 };
 
-//Carves the way
 Maze.prototype.carve = function(from, to){
 	if(from.y < to.y){
 		this.carveBlock(from.x, from.y+1);
@@ -207,9 +202,8 @@ Maze.prototype.carve = function(from, to){
 	}
 };
 
-//Carve the actual carveBlock
 Maze.prototype.carveBlock = function(x, y){
-	if((x > 0 && x < this.w-1) && (y > 0 && y < this.h-1) && (this.field[y][x] === 0)){
+	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 0)){
 		this.field[y][x] = 1;
 	}
-}
+};
