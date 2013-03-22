@@ -127,21 +127,6 @@ $(document).ready(function() {
             }
         };
 
-        // //Fill the field with walkables first.
-        // for(var row=0; row<g_oPlayingfield.h; row++){
-        //     g_oPlayingfield.field[row] = [];
-        //     for(var col=0; col<g_oPlayingfield.w; col++){
-        //         g_oPlayingfield.field[row][col] = 1;
-        //     }
-        // }
-
-        // //put some arbitray walls
-        // for(var i=0; i<96; i++){
-        //     var x = A1random(0, g_oFieldSize.w);
-        //     var y = A1random(0, g_oFieldSize.h);
-        //     g_oPlayingfield.field[y][x] = 0;
-        // }
-
         //Add to entities
         g_pEntities[g_oPlayingfield.uniqueName] = g_oPlayingfield;
     }

@@ -35,17 +35,15 @@ Maze.prototype.generate = function(){
 		//Carve from the neighbour the the current node
 		this.carve(rndNeighbour, curNode);
 		this.markAdjacent(curNode);
-
-		//Drawing here would look pretty
 	}
 
 	//Place an exit
 	this.placeExit();
 	//Place a start and return it
-	return this.placePlayerStart();
+	return this.getPlayerStart();
 };
 
-Maze.prototype.placePlayerStart = function(){
+Maze.prototype.getPlayerStart = function(){
 	var x = 1;
 	var y = 1;
 
@@ -57,7 +55,7 @@ Maze.prototype.placePlayerStart = function(){
 		//Make sure it's not a wall
 		if(this.field[y][x] !== 0){
 			//Mark found position with 2 for player start
-			this.field[y][x] = 2;
+			//this.field[y][x] = 2;
 			break;
 		}
 	}
