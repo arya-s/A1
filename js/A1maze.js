@@ -16,20 +16,23 @@ Maze.prototype.init = function(){
 	}
 
 	//Choose a random starting position and make sure its odd
-	this.startingPosition.x = A1random(0, this.w)|1;
-	this.startingPosition.y = A1random(0, this.h)|1;
+	this.startingPosition.x = A1random(0, this.w-1)|1;
+	this.startingPosition.y = A1random(0, this.h-1)|1;
+	console.log(this.startingPosition);
 };
 
 Maze.prototype.generate = function(){
 	//Mark the start
 	this.markAdjacent(this.startingPosition);
-	while(this.frontierList.length !== 0){
+	while(this.frontierList.length > 0){
 		//Pick a node out and delete it from the frontier list
 		var curNode = this.frontierList.splice(A1random(0, this.frontierList.length), 1);
 		//Find the neighbours of the current node
 		var nList = this.neighbours(curNode[0]);
 		//Pick a random neighbour next
 		var rndNeighbour = nList[A1random(0, nList.length)];
+		console.log("curNode: "+curNode);
+		console.log("rndNeighbour"+rndNeighbour);
 		//Carve out the way from the current Node to the neighbour
 		this.carve(rndNeighbour, curNode[0]);
 		//Mark adjacent
@@ -49,8 +52,8 @@ Maze.prototype.placeStart = function(){
 	var y = 0;
 	//Find a random valid starting position for the player
 	while(true){
-		x = A1random(0, this.w)|1;
-		y = A1random(0, this.h)|1;
+		x = A1random(0, this.w-1)|1;
+		y = A1random(0, this.h-1)|1;
 
 		if(this.field[y][x] !== 0){
 			this.field[y][x] = 2;

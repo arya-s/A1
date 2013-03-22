@@ -39,7 +39,7 @@ $(document).ready(function() {
         g_oPlayer = {
             uniqueName: "Player"
             , color: g_oTiles[2]
-            , node: new A1Node(0, 0)
+            , node: new A1Node(startNode.x*g_oFieldSize.unitSize, startNode.y*g_oFieldSize.unitSize)
             , w: g_oFieldSize.unitSize
             , h: g_oFieldSize.unitSize
             , speed: 250
