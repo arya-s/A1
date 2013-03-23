@@ -33,7 +33,7 @@ $(document).ready(function() {
         //Create a maze playfield
         g_oMaze = new Maze(g_oFieldSize.w, g_oFieldSize.h);
         g_oMaze.init();
-        var startNode = g_oMaze.generate();
+        var startNode = g_oMaze.generate(true);
 
         //Create the player
         g_oPlayer = {
@@ -131,4 +131,3 @@ $(document).ready(function() {
         g_pEntities[g_oPlayingfield.uniqueName] = g_oPlayingfield;
     }
 });
-

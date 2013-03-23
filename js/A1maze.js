@@ -23,7 +23,46 @@ Maze.prototype.init = function(){
 	this.frontierList = [];
 };
 
-Maze.prototype.generate = function(){
+Maze.prototype.generate = function(render){
+	if(render){
+		return this.generateAndRender();
+	}
+
+	return this.generateWithoutRender();
+};
+
+Maze.prototype.generateAndRender = function(){
+	//Mark the starting position
+	this.markAdjacent(this.startCarvePos);
+	//Simulate the carving loop, each carving takes 50ms and will be rendered immediately
+	this.timer = setInterval(this.carveAndRender.bind(this), 50);
+	//Place a start and return it
+	return this.getPlayerStart();
+};
+
+Maze.prototype.carveAndRender = function(){
+	//Break condition
+	if(this.frontierList.length === 0){
+		console.log("canceling");
+		clearInterval(this.timer);
+		//Place an exit
+		this.placeExit();
+		return;
+	}
+
+	//Take a random node out of the frontierList
+	var curNodeList = this.frontierList.splice(A1random(0, this.frontierList.length), 1);
+	var curNode = curNodeList[0];
+	var nList = this.neighbours(curNode.x, curNode.y);
+	var rndNeighbour = nList[A1random(0, nList.length)];
+	//Carve from the neighbour the the current node
+	this.carve(rndNeighbour, curNode);
+	this.markAdjacent(curNode);
+
+	this.render();
+};
+
+Maze.prototype.generateWithoutRender = function(){
 	//Mark the starting position
 	this.markAdjacent(this.startCarvePos);
 	while(this.frontierList.length > 0){
@@ -36,11 +75,23 @@ Maze.prototype.generate = function(){
 		this.carve(rndNeighbour, curNode);
 		this.markAdjacent(curNode);
 	}
+	this.render();
 
 	//Place an exit
 	this.placeExit();
 	//Place a start and return it
 	return this.getPlayerStart();
+};
+
+Maze.prototype.render = function(){
+	g_eContext.clearRect(0, 0, g_eViewport.w, g_eViewport.h);
+	for (var row = 0; row < this.height; row++) {
+		for (var col = 0; col < this.width; col++) {
+			//Select the representation stored in g_oTiles for the current value in the field
+			g_eContext.fillStyle = g_oTiles[this.field[row][col]];
+			g_eContext.fillRect(col * g_oFieldSize.unitSize, row * g_oFieldSize.unitSize, g_oFieldSize.unitSize, g_oFieldSize.unitSize);
+		}
+	}
 };
 
 Maze.prototype.getPlayerStart = function(){
