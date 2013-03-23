@@ -10,9 +10,9 @@ $(document).ready(function() {
         var startNode = window.oMaze.generate(true);
         window.pEntities[window.oMaze.uniqueName] = window.oMaze;
         //Create the player
-        window.oPlayer = new A1Player(startNode, "Player");
+        var oPlayer = new A1Player(startNode, "Player");
         //Player should be the highest z-index so add it last... need to implement z-indexing!
-        window.pEntities[window.oPlayer.uniqueName] = window.oPlayer;
+        window.pEntities[oPlayer.uniqueName] = oPlayer;
     })();
 
 	(function gameloop() {
