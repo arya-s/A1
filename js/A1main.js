@@ -2,7 +2,7 @@
 window.pEntities = {};
 
 //Make sure jQuery is loaded else we can't use the hotkey plugin
-$(document).ready(function() {
+$(document).ready(function(){
     (function init(){
         //Create a maze playfield
         window.oMaze = new A1Maze(window.oFieldSize.w, window.oFieldSize.h, "Maze");
@@ -15,26 +15,25 @@ $(document).ready(function() {
         window.pEntities[oPlayer.uniqueName] = oPlayer;
     })();
 
-	(function gameloop() {
+    (function gameloop(){
         //Only manipulate the game if the Maze was fully generated.
         if(window.oMaze.isReady){
             update(A1getTimeDiff());
             draw();
         }
+        window.requestAnimFrame(gameloop);
+    })();
 
-		window.requestAnimFrame(gameloop);
-	})();
+    function draw(){
+        window.eContext.clearRect(0, 0, window.eViewport.w, window.eViewport.h);
+        for(var e in window.pEntities){
+            window.pEntities[e].draw();
+        }
+    }
 
-	function draw() {
-		window.eContext.clearRect(0, 0, window.eViewport.w, window.eViewport.h);
-		for(var e in window.pEntities){
-			window.pEntities[e].draw();
-		}
-	}
-
-	function update(dt) {
-		for(var e in window.pEntities){
-			window.pEntities[e].update(dt);
-		}
-	}
+    function update(dt){
+        for(var e in window.pEntities){
+            window.pEntities[e].update(dt);
+        }
+    }
 });
