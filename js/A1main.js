@@ -84,8 +84,11 @@ $(document).ready(function() {
     window.onresize = canvasInit;
 
 	function gameloop() {
-		update(A1getTimeDiff());
-		draw();
+        //Only manipulate the game if the Maze was fully generated.
+        if(g_oMaze.isReady){
+            update(A1getTimeDiff());
+            draw();
+        }
 
 		requestAnimFrame(gameloop);
 	}

@@ -10,6 +10,8 @@ function Maze(width, height){
 			this.field[row][col] = 0;
 		}
 	}
+
+	this.isReady = false;
 }
 
 Maze.prototype.init = function(){
@@ -35,6 +37,7 @@ Maze.prototype.generateAndRender = function(){
 	//Mark the starting position
 	this.markAdjacent(this.startCarvePos);
 	//Simulate the carving loop, each carving takes 50ms and will be rendered immediately
+	//We need to bind "this" to the method else we can't access the Maze's data
 	this.timer = setInterval(this.carveAndRender.bind(this), 20);
 	//Place a start and return it
 	return this.getPlayerStart();
@@ -46,6 +49,7 @@ Maze.prototype.carveAndRender = function(){
 		clearInterval(this.timer);
 		//Place an exit
 		this.placeExit();
+		this.isReady = true;
 		return;
 	}
 
@@ -75,6 +79,7 @@ Maze.prototype.generateWithoutRender = function(){
 		this.markAdjacent(curNode);
 	}
 	this.render();
+	this.isReady = true;
 
 	//Place an exit
 	this.placeExit();
