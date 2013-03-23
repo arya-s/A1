@@ -31,9 +31,17 @@ $(document).ready(function() {
 
     function init(){
         //Create a maze playfield
-        g_oMaze = new Maze(g_oFieldSize.w, g_oFieldSize.h);
+        g_oMaze = new A1Maze(g_oFieldSize.w, g_oFieldSize.h);
         g_oMaze.init();
         var startNode = g_oMaze.generate(true);
+
+        //Some tests:
+        var p1 = new A1Player(1);
+        console.log(g_pEntities);
+        var p2 = new A1Player(2);
+        console.log(g_pEntities);
+        var p3 = new A1Player(3);
+        console.log(g_pEntities);
 
         //Create the player
         g_oPlayer = {

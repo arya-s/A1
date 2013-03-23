@@ -1,4 +1,4 @@
-function Maze(width, height){
+function A1Maze(width, height){
 	//Only odd dimensions are valid
 	this.width = width|1;
 	this.height = height|1;
@@ -14,7 +14,7 @@ function Maze(width, height){
 	this.isReady = false;
 }
 
-Maze.prototype.init = function(){
+A1Maze.prototype.init = function(){
 	//Find a random start location from where to carve out the maze
 	//Must be odd and within range
 	var x = A1random(0, (this.width-1))|1;
@@ -25,7 +25,7 @@ Maze.prototype.init = function(){
 	this.frontierList = [];
 };
 
-Maze.prototype.generate = function(render){
+A1Maze.prototype.generate = function(render){
 	if(render){
 		return this.generateAndRender();
 	}
@@ -33,7 +33,7 @@ Maze.prototype.generate = function(render){
 	return this.generateWithoutRender();
 };
 
-Maze.prototype.generateAndRender = function(){
+A1Maze.prototype.generateAndRender = function(){
 	//Mark the starting position
 	this.markAdjacent(this.startCarvePos);
 	//Simulate the carving loop, each carving takes 50ms and will be rendered immediately
@@ -43,7 +43,7 @@ Maze.prototype.generateAndRender = function(){
 	return this.getPlayerStart();
 };
 
-Maze.prototype.carveAndRender = function(){
+A1Maze.prototype.carveAndRender = function(){
 	//Break condition
 	if(this.frontierList.length === 0){
 		clearInterval(this.timer);
@@ -65,7 +65,7 @@ Maze.prototype.carveAndRender = function(){
 	this.render();
 };
 
-Maze.prototype.generateWithoutRender = function(){
+A1Maze.prototype.generateWithoutRender = function(){
 	//Mark the starting position
 	this.markAdjacent(this.startCarvePos);
 	while(this.frontierList.length > 0){
@@ -87,7 +87,7 @@ Maze.prototype.generateWithoutRender = function(){
 	return this.getPlayerStart();
 };
 
-Maze.prototype.render = function(){
+A1Maze.prototype.render = function(){
 	g_eContext.clearRect(0, 0, g_eViewport.w, g_eViewport.h);
 	for (var row = 0; row < this.height; row++) {
 		for (var col = 0; col < this.width; col++) {
@@ -98,7 +98,7 @@ Maze.prototype.render = function(){
 	}
 };
 
-Maze.prototype.getPlayerStart = function(){
+A1Maze.prototype.getPlayerStart = function(){
 	var x = 1;
 	var y = 1;
 
@@ -117,7 +117,7 @@ Maze.prototype.getPlayerStart = function(){
 	return new A1Node(x, y);
 };
 
-Maze.prototype.placeExit = function(){
+A1Maze.prototype.placeExit = function(){
 		////
 		// This is a Diagram depicting the possible sides
 		// and values for x,y (active = 1, inactive = 0)
@@ -196,7 +196,7 @@ Maze.prototype.placeExit = function(){
 };
 
 //Marks the field at x,y and its frontiers
-Maze.prototype.markAdjacent = function(n){
+A1Maze.prototype.markAdjacent = function(n){
 	//Mark it walkable
 	this.field[n.y][n.x] = 1;
 	this.addFrontier(n.x-2, n.y);
@@ -206,7 +206,7 @@ Maze.prototype.markAdjacent = function(n){
 };
 
 //Adds the frontier if its within valid values and the frontier was not previously traversed
-Maze.prototype.addFrontier = function(x, y){
+A1Maze.prototype.addFrontier = function(x, y){
 	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 0)){
 		//Frontier is represented by the value 6
 		this.field[y][x] = 6;
@@ -215,7 +215,7 @@ Maze.prototype.addFrontier = function(x, y){
 };
 
 //Gets all neighbours of the node that have been marked as walkable
-Maze.prototype.neighbours = function(x, y){
+A1Maze.prototype.neighbours = function(x, y){
 	var list = [];
 	if(this.checkNode(x-2, y)){
 		list.push(new A1Node(x-2, y));
@@ -233,14 +233,14 @@ Maze.prototype.neighbours = function(x, y){
 };
 
 //Checks the given position if its walkable
-Maze.prototype.checkNode = function(x, y){
+A1Maze.prototype.checkNode = function(x, y){
 	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 1)){
 		return true;
 	}
 	return false;
 };
 
-Maze.prototype.carve = function(from, to){
+A1Maze.prototype.carve = function(from, to){
 	if(from.y < to.y){
 		this.carveBlock(from.x, from.y+1);
 	}
@@ -255,7 +255,7 @@ Maze.prototype.carve = function(from, to){
 	}
 };
 
-Maze.prototype.carveBlock = function(x, y){
+A1Maze.prototype.carveBlock = function(x, y){
 	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 0)){
 		this.field[y][x] = 1;
 	}
