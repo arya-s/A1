@@ -8,7 +8,7 @@ function A1Player(startNode, uniqueName){
 
 A1Player.prototype.draw = function(){
 	window.eContext.fillStyle = this.color;
-    window.eContext.fillRect(this.startNode.x, this.startNode.y, window.oFieldSize.unitSize, window.oFieldSize.unitSize);	
+    window.eContext.fillRect(this.startNode.x, this.startNode.y, window.oFieldSize.unitSize, window.oFieldSize.unitSize);
 };
 
 A1Player.prototype.update = function(dt){
