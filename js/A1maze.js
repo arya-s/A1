@@ -1,7 +1,8 @@
-function A1Maze(width, height){
+function A1Maze(width, height, uniqueName){
 	//Only odd dimensions are valid
 	this.width = width|1;
 	this.height = height|1;
+	this.uniqueName = uniqueName;
 	//Fill the field full with walls - represented by 0
 	this.field = [];
 	for(var row=0; row<this.height; row++){
@@ -62,7 +63,7 @@ A1Maze.prototype.carveAndRender = function(){
 	this.carve(rndNeighbour, curNode);
 	this.markAdjacent(curNode);
 
-	this.render();
+	this.renderInit();
 };
 
 A1Maze.prototype.generateWithoutRender = function(){
@@ -87,7 +88,7 @@ A1Maze.prototype.generateWithoutRender = function(){
 	return this.getPlayerStart();
 };
 
-A1Maze.prototype.render = function(){
+A1Maze.prototype.renderInit = function(){
 	g_eContext.clearRect(0, 0, g_eViewport.w, g_eViewport.h);
 	for (var row = 0; row < this.height; row++) {
 		for (var col = 0; col < this.width; col++) {
@@ -259,4 +260,18 @@ A1Maze.prototype.carveBlock = function(x, y){
 	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 0)){
 		this.field[y][x] = 1;
 	}
+};
+
+A1Maze.prototype.draw = function(){
+	for(var row=0; row<this.height; row++){
+		for(var col=0; col<this.width; col++){
+			//Select the representation stored in g_oTiles for the current value in the field
+			g_eContext.fillStyle = g_oTiles[this.field[row][col]];
+			g_eContext.fillRect(col*g_oFieldSize.unitSize, row*g_oFieldSize.unitSize, g_oFieldSize.unitSize, g_oFieldSize.unitSize);
+		}
+	}
+};
+
+A1Maze.prototype.update = function(dt){
+	//Empty for now
 };
