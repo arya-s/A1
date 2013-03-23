@@ -35,7 +35,7 @@ Maze.prototype.generateAndRender = function(){
 	//Mark the starting position
 	this.markAdjacent(this.startCarvePos);
 	//Simulate the carving loop, each carving takes 50ms and will be rendered immediately
-	this.timer = setInterval(this.carveAndRender.bind(this), 50);
+	this.timer = setInterval(this.carveAndRender.bind(this), 20);
 	//Place a start and return it
 	return this.getPlayerStart();
 };
@@ -43,7 +43,6 @@ Maze.prototype.generateAndRender = function(){
 Maze.prototype.carveAndRender = function(){
 	//Break condition
 	if(this.frontierList.length === 0){
-		console.log("canceling");
 		clearInterval(this.timer);
 		//Place an exit
 		this.placeExit();
