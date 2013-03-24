@@ -92,9 +92,10 @@ A1Maze.prototype.renderInit = function(){
 	window.eContext.clearRect(0, 0, window.eViewport.w, window.eViewport.h);
 	for (var row = 0; row < this.height; row++) {
 		for (var col = 0; col < this.width; col++) {
-			//Select the representation stored in window.oTiles for the current value in the field
-			window.eContext.fillStyle = window.oTiles[this.field[row][col]];
-			window.eContext.fillRect(col * window.oFieldSize.unitSize, row * window.oFieldSize.unitSize, window.oFieldSize.unitSize, window.oFieldSize.unitSize);
+			//Dont render frontier nodes
+			if(this.field[row][col] !== 6){
+				window.eContext.drawImage(window.oTiles[this.field[row][col]], col * window.oFieldSize.unitSize, row * window.oFieldSize.unitSize);
+			}
 		}
 	}
 };
@@ -265,9 +266,13 @@ A1Maze.prototype.carveBlock = function(x, y){
 A1Maze.prototype.draw = function(){
 	for(var row=0; row<this.height; row++){
 		for(var col=0; col<this.width; col++){
-			//Select the representation stored in window.oTiles for the current value in the field
-			window.eContext.fillStyle = window.oTiles[this.field[row][col]];
-			window.eContext.fillRect(col*window.oFieldSize.unitSize, row*window.oFieldSize.unitSize, window.oFieldSize.unitSize, window.oFieldSize.unitSize);
+			//Dont render frontier nodes
+			if(this.field[row][col] !== 6){
+				//Select the representation stored in window.oTiles for the current value in the field
+				//window.eContext.fillStyle = window.oTiles[this.field[row][col]];
+				//window.eContext.fillRect(col*window.oFieldSize.unitSize, row*window.oFieldSize.unitSize, window.oFieldSize.unitSize, window.oFieldSize.unitSize);
+				window.eContext.drawImage(window.oTiles[this.field[row][col]], col * window.oFieldSize.unitSize, row * window.oFieldSize.unitSize);
+			}
 		}
 	}
 };

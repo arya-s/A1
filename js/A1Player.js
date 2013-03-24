@@ -15,9 +15,10 @@ function A1Player(posNode, uniqueName){
 }
 
 A1Player.prototype.draw = function(){
-	window.eContext.fillStyle = this.color;
+	//window.eContext.fillStyle = this.color;
     //window.eContext.fillRect(this.posNode.x, this.posNode.y, window.oFieldSize.unitSize, window.oFieldSize.unitSize);
-	window.eContext.fillRect(this.posNode.x*window.oFieldSize.unitSize, this.posNode.y*window.oFieldSize.unitSize, window.oFieldSize.unitSize, window.oFieldSize.unitSize);
+	//window.eContext.fillRect(this.posNode.x*window.oFieldSize.unitSize, this.posNode.y*window.oFieldSize.unitSize, window.oFieldSize.unitSize, window.oFieldSize.unitSize);
+	window.eContext.drawImage(window.oTiles[2], this.posNode.x*window.oFieldSize.unitSize, this.posNode.y*window.oFieldSize.unitSize);
 };
 
 A1Player.prototype.update = function(dt){

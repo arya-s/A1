@@ -5,11 +5,11 @@ window.oTime = {
 },
 window.oTiles = {
 	//wall
-	0: "#AAA",
+	0: null,
 	//floor
-	1: "#663",
+	1: null,
 	//player
-	2: "#00A"
+	2: null
 },
 window.oFieldSize = {
 	w: 31,
@@ -39,6 +39,9 @@ function canvasInit(){
 	window.eCanvas.elem.style.top = (window.eViewport.h - window.eCanvas.h) / 2;
 	window.eCanvas.elem.style.left = (window.eViewport.w - window.eCanvas.w) / 2;
 	window.eContext = window.eCanvas.elem.getContext("2d");
+
+	//Load the tiles
+	initTiles();
 }
 canvasInit();
 window.onresize = canvasInit;
@@ -50,6 +53,16 @@ window.requestAnimFrame = (function() {
         window.setTimeout(callback, 1000 / 60);
     };
 })();
+
+function initTiles(){
+        //Wall
+        A1loadTile("res/brick_dark4.png", 0);
+        //Floor
+        A1loadTile("res/cobble_blood1.png", 1);
+        //Player
+        A1loadTile("res/deep_elf_knight.png", 2);
+}
+
 
 function A1clamp(val, min, max){
     return Math.min(Math.max(val, min), max);
@@ -66,4 +79,12 @@ function A1getTimeDiff(){
 
 function A1random(min, max){
 	return Math.floor((Math.random()*max)+min);
+}
+
+function A1loadTile(url, identifier){
+	var img = new Image();
+	img.onload = function(){
+		window.oTiles[identifier] = img;
+	}
+    img.src = url;
 }
