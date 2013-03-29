@@ -17,7 +17,7 @@ $(document).ready(function(){
 
     (function gameloop(){
         //Only manipulate the game if the Maze was fully generated.
-        if(window.oMaze.isReady){
+        if(window.bRunning && window.oMaze.isReady){
             update(A1getTimeDiff());
             draw();
         }
@@ -25,7 +25,7 @@ $(document).ready(function(){
     })();
 
     function draw(){
-        window.eContext.clearRect(0, 0, window.eViewport.w, window.eViewport.h);
+        A1clearCanvas();
         for(var e in window.pEntities){
             window.pEntities[e].draw();
         }

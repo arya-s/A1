@@ -89,13 +89,10 @@ A1Maze.prototype.generateWithoutRender = function(){
 };
 
 A1Maze.prototype.renderInit = function(){
-	window.eContext.clearRect(0, 0, window.eViewport.w, window.eViewport.h);
+	A1clearCanvas();
 	for (var row = 0; row < this.height; row++) {
 		for (var col = 0; col < this.width; col++) {
-			//Dont render frontier nodes
-			if(this.field[row][col] !== 6){
-				window.eContext.drawImage(window.oTiles[this.field[row][col]], col * window.oFieldSize.unitSize, row * window.oFieldSize.unitSize);
-			}
+			this.drawImage(this.field[row][col], col, row);
 		}
 	}
 };
@@ -211,7 +208,7 @@ A1Maze.prototype.markAdjacent = function(n){
 A1Maze.prototype.addFrontier = function(x, y){
 	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 0)){
 		//Frontier is represented by the value 6
-		this.field[y][x] = 6;
+		this.field[y][x] = 3;
 		this.frontierList.push(new A1Node(x, y));
 	}
 };
@@ -236,7 +233,8 @@ A1Maze.prototype.neighbours = function(x, y){
 
 //Checks the given position if its walkable
 A1Maze.prototype.checkNode = function(x, y){
-	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 1)){
+	//%10 because floors are defined by the last digit in the field
+	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x]%10 === 1)){
 		return true;
 	}
 	return false;
@@ -259,22 +257,36 @@ A1Maze.prototype.carve = function(from, to){
 
 A1Maze.prototype.carveBlock = function(x, y){
 	if((x > 0 && x < (this.width-1)) && (y > 0 && y < (this.height-1)) && (this.field[y][x] === 0)){
-		this.field[y][x] = 1;
+		this.field[y][x] = this.randomTile(1);
 	}
+};
+
+A1Maze.prototype.randomTile = function(tileType){
+	//Floors are represtend by NM where N is a random tile and M is the tile type
+	var out = A1random(0, 8).toString();
+	out += tileType.toString();
+	return parseInt(out, 10);
 };
 
 A1Maze.prototype.draw = function(){
 	for(var row=0; row<this.height; row++){
 		for(var col=0; col<this.width; col++){
-			//Dont render frontier nodes
-			if(this.field[row][col] !== 6){
-				//Select the representation stored in window.oTiles for the current value in the field
-				//window.eContext.fillStyle = window.oTiles[this.field[row][col]];
-				//window.eContext.fillRect(col*window.oFieldSize.unitSize, row*window.oFieldSize.unitSize, window.oFieldSize.unitSize, window.oFieldSize.unitSize);
-				window.eContext.drawImage(window.oTiles[this.field[row][col]], col * window.oFieldSize.unitSize, row * window.oFieldSize.unitSize);
-			}
+			this.drawImage(this.field[row][col], col, row);
 		}
 	}
+};
+
+A1Maze.prototype.drawImage = function(val, x, y){
+	//Last position determines the type of the tile
+	var tileType = val % 10;
+	var tileIndex = 0;
+	//If the specified value has more than one digit we have to extract the tile index
+	if(val > 9){
+		var valString = val.toString();
+		tileIndex = parseInt(valString.substring(0, valString.length-1), 10);
+	}
+
+	A1drawImage(A1getTile(tileType, tileIndex), x, y);
 };
 
 A1Maze.prototype.update = function(dt){

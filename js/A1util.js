@@ -3,14 +3,10 @@ window.oTime = {
 	diff: 0,
 	last: 0
 },
-window.oTiles = {
-	//wall
-	0: null,
-	//floor
-	1: null,
-	//player
-	2: null
-},
+window.oTiles = {},
+window.pTileNames = [],
+window.nTiles = 0,
+window.nLoaded = 0,
 window.oFieldSize = {
 	w: 31,
 	h: 17,
@@ -27,7 +23,8 @@ window.eCanvas = {
     w: 1024-32, //Making sure the gamefiled is odd in terms of multiple of 32 //window.eViewport.w * window.nWidthRatio
     h: 576-32 //(window.eViewport.w * window.nWidthRatio) / 2
 },
-window.eContext = null;
+window.eContext = null,
+window.bRunning = false;
 
 function canvasInit(){
 	//Center the window.eCanvas and scale it
@@ -39,10 +36,9 @@ function canvasInit(){
 	window.eCanvas.elem.style.top = (window.eViewport.h - window.eCanvas.h) / 2;
 	window.eCanvas.elem.style.left = (window.eViewport.w - window.eCanvas.w) / 2;
 	window.eContext = window.eCanvas.elem.getContext("2d");
-
-	//Load the tiles
-	initTiles();
 }
+//Load the tiles
+initTiles();
 canvasInit();
 window.onresize = canvasInit;
 
@@ -55,14 +51,19 @@ window.requestAnimFrame = (function() {
 })();
 
 function initTiles(){
-        //Wall
-        A1loadTile("res/brick_dark4.png", 0);
-        //Floor
-        A1loadTile("res/cobble_blood1.png", 1);
-        //Player
-        A1loadTile("res/deep_elf_knight.png", 2);
+	window.nTiles = 14;
+	A1loadTile('wall', 'res/brick_dark4.png');
+	A1loadTile('floor', 'res/cobble_blood1.png'); 
+	A1loadTile('floor', 'res/cobble_blood2.png');
+	A1loadTile('floor', 'res/cobble_blood3.png');
+	A1loadTile('floor', 'res/cobble_blood4.png');
+	A1loadTile('floor', 'res/cobble_blood5.png');
+	A1loadTile('floor', 'res/cobble_blood8.png');
+	A1loadTile('floor', 'res/cobble_blood9.png');
+	A1loadTile('floor', 'res/cobble_blood10.png');
+	A1loadTile('player', 'res/deep_elf_knight.png');
+	A1loadTile('frontier', 'res/cobble_blood12.png');
 }
-
 
 function A1clamp(val, min, max){
     return Math.min(Math.max(val, min), max);
@@ -81,10 +82,42 @@ function A1random(min, max){
 	return Math.floor((Math.random()*max)+min);
 }
 
-function A1loadTile(url, identifier){
+function A1loadTile(identifier, url){
+	var unique = false;
+	if(window.oTiles[identifier] === undefined){
+		window.oTiles[identifier] = [];
+		unique = true;
+	}
+
 	var img = new Image();
 	img.onload = function(){
-		window.oTiles[identifier] = img;
+		window.nLoaded++;
+		if(unique){
+			window.pTileNames.push(identifier);
+		}
+		window.oTiles[identifier].push(img);
+		if(window.nLoaded === window.nTiles){
+			//All tiles loaded, start the gameloop
+			window.bRunning = true;
+			console.log(window.oTiles);
+		}
+	};
+	img.src = url;
+}
+
+function A1getTile(tile, idx){
+	if(typeof tile === "number"){
+		return window.oTiles[window.pTileNames[tile]][idx];
+	} else if(typeof tile === "string"){
+		return window.oTiles[tile][idx];
 	}
-    img.src = url;
+	//TODO: return empty tile
+}
+
+function A1clearCanvas(){
+	window.eContext.clearRect(0, 0, window.eViewport.w, window.eViewport.h);
+}
+
+function A1drawImage(img, x, y){
+	window.eContext.drawImage(img, x * window.oFieldSize.unitSize, y * window.oFieldSize.unitSize);
 }
