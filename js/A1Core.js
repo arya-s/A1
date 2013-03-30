@@ -19,6 +19,11 @@ define(["A1Time", "A1Game"], function(A1Time, A1Game) {
 		this.debug = false;
 		this.lastFPS = 0;
 		this.fps = 0;
+		//Enable debugging on pressing "p"
+		$(document).bind('keypress', 'p', (function(){
+			this.debug = !this.debug;
+			console.log(this);
+		}).bind(this));
 	}
 
 	A1Core.prototype.hook = function(game) {
@@ -33,16 +38,13 @@ define(["A1Time", "A1Game"], function(A1Time, A1Game) {
 	};
 
 	A1Core.prototype.run = function() {
+		console.log(this.debug);
 		this.update(A1Time.getDifference());
 		this.draw();
 		requestAnimFrame(this.run.bind(this));
 	};
 
 	A1Core.prototype.update = function(dt) {
-		if(keydown.p){
-			this.debug = !this.debug;
-		}
-
 		if(this.game !== undefined){
 			this.game.update(dt);
 		}
