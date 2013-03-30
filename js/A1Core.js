@@ -19,10 +19,10 @@ define(["A1Time", "A1Game"], function(A1Time, A1Game) {
 		this.debug = false;
 		this.lastFPS = 0;
 		this.fps = 0;
+
 		//Enable debugging on pressing "p"
 		$(document).bind('keypress', 'p', (function(){
 			this.debug = !this.debug;
-			console.log(this);
 		}).bind(this));
 	}
 
@@ -38,7 +38,6 @@ define(["A1Time", "A1Game"], function(A1Time, A1Game) {
 	};
 
 	A1Core.prototype.run = function() {
-		console.log(this.debug);
 		this.update(A1Time.getDifference());
 		this.draw();
 		requestAnimFrame(this.run.bind(this));
@@ -101,8 +100,8 @@ define(["A1Time", "A1Game"], function(A1Time, A1Game) {
 
 	A1Core.prototype.drawFPS = function() {
 		this.canvas.context.font = "35pt Arial";
-		this.canvas.context.fillStyle = "blue";
-		this.canvas.context.fillText(this.fps.toString(), 20, 50);
+		this.canvas.context.fillStyle = "yellow";
+		this.canvas.context.fillText(this.fps.toString(), this.canvas.dimensions.width-80, 50);
 	};
 
 	return A1Core;
