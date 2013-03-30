@@ -13,6 +13,9 @@ define(function() {
 			this.last = this.now;
 
 			return this.difference;
+		},
+		getFPS: function(){
+			return (1/this.difference).toFixed(0);
 		}
 	};
 });

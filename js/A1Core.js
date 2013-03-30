@@ -16,6 +16,9 @@ define(["A1Time", "A1Game"], function(A1Time, A1Game) {
 			width: window.innerWidth,
 			height: window.innerHeight
 		};
+		this.debug = false;
+		this.lastFPS = 0;
+		this.fps = 0;
 	}
 
 	A1Core.prototype.hook = function(game) {
@@ -36,14 +39,24 @@ define(["A1Time", "A1Game"], function(A1Time, A1Game) {
 	};
 
 	A1Core.prototype.update = function(dt) {
+		if(keydown.p){
+			this.debug = !this.debug;
+		}
+
 		if(this.game !== undefined){
 			this.game.update(dt);
+		}
+		if(this.debug){
+			this.updateFPS();
 		}
 	};
 
 	A1Core.prototype.draw = function() {
 		if(this.game !== undefined){
 			this.game.draw();
+		}
+		if(this.debug){
+			this.drawFPS();
 		}
 	};
 
@@ -73,6 +86,21 @@ define(["A1Time", "A1Game"], function(A1Time, A1Game) {
 
 	A1Core.prototype.drawImage = function(img, x, y) {
 		this.canvas.context.drawImage(img, x*this.canvas.dimensions.unitSize, y*this.canvas.dimensions.unitSize);
+	};
+
+	A1Core.prototype.updateFPS = function() {
+		//Make FPS readable
+		var now = A1Time.now;
+		if(now - 50 > this.lastFPS){
+			this.lastFPS = now;
+			this.fps = A1Time.getFPS();
+		}
+	};
+
+	A1Core.prototype.drawFPS = function() {
+		this.canvas.context.font = "35pt Arial";
+		this.canvas.context.fillStyle = "blue";
+		this.canvas.context.fillText(this.fps.toString(), 20, 50);
 	};
 
 	return A1Core;
