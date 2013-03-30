@@ -1,4 +1,4 @@
-define(["A1Core", "A1Vec2", "A1util"], function(A1Core, A1Vec2, A1util){
+define(["A1Vec2", "A1util"], function(A1Vec2, A1util){
 	function A1Maze(width, height, uniqueName, core, resources){
 		//Only odd dimensions are valid
 		this.width = width|1;

@@ -5,7 +5,7 @@
 // For drawing purposes you need to specify a hook method which takes a core as its parameter.
 // The core can be used for rendering (wrapper methods), or directly for accessing the canvas.
 // Author: arya-s
-define(["A1Core", "A1Time", "A1Maze", "A1Player"], function(A1Core, A1Time, A1Maze, A1Player) {
+define(["A1Time", "A1Maze", "A1Player"], function(A1Time, A1Maze, A1Player) {
 	function A1Game(w, h, resources){
 		this.width = w;
 		this.height = h;

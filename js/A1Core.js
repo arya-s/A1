@@ -4,7 +4,7 @@
 // You should not need to change this module, just make sure you hook your game to it
 // All the drawing code you might need is wrapped in here. If not, feel free to use the canvas
 // Author: arya-s
-define(["A1Time", "A1Game"], function(A1Time, A1Game) {
+define(["A1Time"], function(A1Time) {
 	function A1Core(canvasDimensions, canvasName){
 		this.canvas = {
 			dimensions: canvasDimensions,

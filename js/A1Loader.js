@@ -11,7 +11,7 @@
 // 7) call init() on the core (the core will init the game from this point)
 // 8) call run() on the core to start the engine (the core will run the game from this point)
 // Author: arya-s
-define(["A1Core", "A1Game"], function(A1Core, A1Game) {
+define(["A1Core", "A1Game", "A1Time"], function(A1Core, A1Game, A1Time) {
 	function A1Loader() {
 		this.resources = {
 			numTiles: 0,
@@ -38,6 +38,8 @@ define(["A1Core", "A1Game"], function(A1Core, A1Game) {
 	};
 
 	A1Loader.prototype.init = function() {
+		//Track the time it takes to load all assets
+		this.startLoadingTime = A1Time.now;
 		this.loadTile('wall', 'res/brick_dark4.png');
 		this.loadTile('floor', 'res/cobble_blood1.png');
 		this.loadTile('floor', 'res/cobble_blood2.png');
@@ -72,6 +74,9 @@ define(["A1Core", "A1Game"], function(A1Core, A1Game) {
 	};
 
 	A1Loader.prototype.run = function() {
+		//Loading done.
+		this.endLoadingTime = A1Time.now;
+		//console.log("Loading time: "+((this.endLoadingTime-this.startLoadingTime)/1000)+"s");
 		//Create core and game
 		var a1core = new A1Core(this.getDim(1024, 576, 32), "A1MainCanvas");
 		var a1game = new A1Game(31, 17, this.resources);
