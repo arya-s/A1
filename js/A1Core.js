@@ -4,7 +4,7 @@
 // You should not need to change this module, just make sure you hook your game to it
 // All the drawing code you might need is wrapped in here. If not, feel free to use the canvas
 // Author: arya-s
-define(["A1Time"], function(A1Time) {
+define(["A1Time", "A1util"], function(A1Time, A1util) {
 	function A1Core(canvasDimensions, canvasName){
 		this.canvas = {
 			dimensions: canvasDimensions,
@@ -47,9 +47,6 @@ define(["A1Time"], function(A1Time) {
 		if(this.game !== undefined){
 			this.game.update(dt);
 		}
-		if(this.debug){
-			this.updateFPS();
-		}
 	};
 
 	A1Core.prototype.draw = function() {
@@ -89,20 +86,26 @@ define(["A1Time"], function(A1Time) {
 		this.canvas.context.drawImage(img, x*this.canvas.dimensions.unitSize, y*this.canvas.dimensions.unitSize);
 	};
 
-	A1Core.prototype.updateFPS = function() {
-		//Make FPS readable
-		var now = A1Time.now;
-		if(now - 50 > this.lastFPS){
-			this.lastFPS = now;
-			this.fps = A1Time.getFPS();
-		}
+	A1Core.prototype.drawFPS = function() {
+		this.drawText(A1Time.getFPS().toString(), this.canvas.dimensions.width-90, 50, "35pt Arial", "yellow");
 	};
 
-	A1Core.prototype.drawFPS = function() {
-		this.canvas.context.font = "35pt Arial";
-		this.canvas.context.fillStyle = "yellow";
-		this.canvas.context.fillText(this.fps.toString(), this.canvas.dimensions.width-80, 50);
+	//---- Core drawing function wrappers
+	A1Core.prototype.clearCanvas = function() {
+		this.canvas.context.clearRect(0, 0, this.canvas.dimensions.width, this.canvas.dimensions.height);
 	};
+
+	A1Core.prototype.drawImage = function(img, x, y) {
+		this.canvas.context.drawImage(img, x*this.canvas.dimensions.unitSize, y*this.canvas.dimensions.unitSize);
+	};
+
+	A1Core.prototype.drawText = function(text, x, y, font, color) {
+		this.canvas.context.font = A1util.defaultValue(font, "10pt Arial");
+		this.canvas.context.fillStyle = A1util.defaultValue(color, "black");
+		this.canvas.context.fillText(text, x, y);
+	};
+	//-----------------------------------
+
 
 	return A1Core;
 });
