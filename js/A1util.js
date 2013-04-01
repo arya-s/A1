@@ -19,6 +19,13 @@ define(function() {
 				height: h-unit,
 				unitSize: unit
 			};
+		},
+		getTilesCount: function(assets){
+			var sum = 0;
+			for(var type in assets.tilePaths){
+				sum += assets.tilePaths[type].length;
+			}
+			return sum;
 		}
 	};
 });

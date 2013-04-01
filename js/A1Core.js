@@ -5,10 +5,11 @@
 // All the drawing code you might need is wrapped in here. If not, feel free to use the canvas
 // Author: arya-s
 define(["A1Time", "A1util"], function(A1Time, A1util) {
-	function A1Core(canvasDimensions, canvasName){
+	function A1Core(game, canvasName){
+		this.game = game;
 		this.canvas = {
-			dimensions: canvasDimensions,
-			name: canvasName,
+			dimensions: A1util.defaultValue(game.canvasDimensions, { width: 321, height: 241, unitSize: 1 }),
+			name: A1util.defaultValue(canvasName, "A1MainCanvas"),
 			element: null,
 			context: null
 		};
@@ -17,21 +18,16 @@ define(["A1Time", "A1util"], function(A1Time, A1util) {
 			height: window.innerHeight
 		};
 		this.debug = false;
-		this.lastFPS = 0;
-		this.fps = 0;
+	}
 
+	A1Core.prototype.init = function() {
 		//Enable debugging on pressing "p"
 		$(document).bind('keypress', 'p', (function(){
 			this.debug = !this.debug;
 		}).bind(this));
-	}
 
-	A1Core.prototype.hook = function(game) {
-		this.game = game;
-	};
-
-	A1Core.prototype.init = function() {
 		this.initCanvas();
+
 		if(this.game !== undefined){
 			this.game.init();
 		}
