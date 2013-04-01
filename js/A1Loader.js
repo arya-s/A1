@@ -38,18 +38,6 @@ define(["A1Core", "A1Game", "A1Time", "A1util"], function(A1Core, A1Game, A1Time
 		this.a1game.hook(this.a1core);
 		//Load the game's assets
 		this.loadAssets(this.a1game.assets());
-		// this.loadTile('wall', 'res/brick_dark4.png');
-		// this.loadTile('floor', 'res/cobble_blood1.png');
-		// this.loadTile('floor', 'res/cobble_blood2.png');
-		// this.loadTile('floor', 'res/cobble_blood3.png');
-		// this.loadTile('floor', 'res/cobble_blood4.png');
-		// this.loadTile('floor', 'res/cobble_blood5.png');
-		// this.loadTile('floor', 'res/cobble_blood8.png');
-		// this.loadTile('floor', 'res/cobble_blood9.png');
-		// this.loadTile('floor', 'res/cobble_blood10.png');
-		// this.loadTile('player', 'res/deep_elf_knight.png');
-		// this.loadTile('frontier', 'res/cobble_blood12.png');
-		// this.resources.numTiles = 11;
 	};
 
 	A1Loader.prototype.loadAssets = function(assets) {
@@ -94,11 +82,7 @@ define(["A1Core", "A1Game", "A1Time", "A1util"], function(A1Core, A1Game, A1Time
 		//Loading done.
 		this.endLoadingTime = A1Time.now;
 		//console.log("Loading time: "+((this.endLoadingTime-this.startLoadingTime)/1000)+"s");
-		//Create core and game
-		// var a1game = new A1Game(this.resources);
-		// var a1core = new A1Core(a1game);
-		// //Hook the core to the game so the game can draw
-		// a1game.hook(a1core);
+
 		//Init the engine
 		this.a1core.init();
 		//Start the engine
